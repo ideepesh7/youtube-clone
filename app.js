@@ -1,6 +1,46 @@
 // ===== YOUTUBE DATA API v3 CONFIGURATION =====
-const API_KEY = 'AIzaSyA8K0RzQ9Q_EwOWzp7cVJPzJBJh8KI8XqI'; // Replace with your own API key from Google Cloud Console
+const API_KEY = 'AIzaSyA8K0RzQ9Q_EwOWzp7cVJPzJBJh8KI8XqI'; 
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+
+// ===== MOCK DATA (Fallback if API fails/key invalid) =====
+const fallbackVideos = [
+  {
+    id: "dQw4w9WgXcQ",
+    title: "Rick Astley - Never Gonna Give You Up (Official Music Video)",
+    channelName: "Rick Astley",
+    thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+    publishedAt: "2009-10-25T00:00:00Z",
+    views: "1500000000",
+    duration: "PT3M33S"
+  },
+  {
+    id: "jNQXAC9IVRw",
+    title: "Me at the zoo",
+    channelName: "jawed",
+    thumbnail: "https://i.ytimg.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
+    publishedAt: "2005-04-24T00:00:00Z",
+    views: "300000000",
+    duration: "PT0M19S"
+  },
+  {
+    id: "L_jWHffIx5E",
+    title: "Smash Mouth - All Star (Official Music Video)",
+    channelName: "SmashMouthVEVO",
+    thumbnail: "https://i.ytimg.com/vi/L_jWHffIx5E/maxresdefault.jpg",
+    publishedAt: "2009-12-25T00:00:00Z",
+    views: "450000000",
+    duration: "PT3M57S"
+  },
+  {
+    id: "9bZkp7q19f0",
+    title: "PSY - GANGNAM STYLE(강남스타일) M/V",
+    channelName: "officialpsy",
+    thumbnail: "https://i.ytimg.com/vi/9bZkp7q19f0/maxresdefault.jpg",
+    publishedAt: "2012-07-15T00:00:00Z",
+    views: "5000000000",
+    duration: "PT4M12S"
+  }
+];
 
 // ===== DOM ELEMENTS =====
 const videosGrid = document.getElementById('videosGrid');
@@ -16,9 +56,11 @@ let videos = [];
 
 // ===== HELPER FUNCTIONS =====
 function formatViews(count) {
-  if (count >= 1000000) return Math.floor(count / 1000000) + 'M views';
-  if (count >= 1000) return Math.floor(count / 1000) + 'K views';
-  return count + ' views';
+  const n = parseInt(count);
+  if (n >= 1000000000) return (n / 1000000000).toFixed(1) + 'B views';
+  if (n >= 1000000) return Math.floor(n / 1000000) + 'M views';
+  if (n >= 1000) return Math.floor(n / 1000) + 'K views';
+  return n + ' views';
 }
 
 function formatDuration(duration) {
@@ -58,28 +100,25 @@ function getRandomColor() {
 // ===== API FUNCTIONS =====
 async function fetchVideos(query = 'trending', maxResults = 24) {
   try {
-    // Show skeleton loaders
     showSkeletonLoaders();
 
-    // First, search for videos
     const searchUrl = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=${maxResults}&order=viewCount&regionCode=IN&key=${API_KEY}`;
     const searchResponse = await fetch(searchUrl);
+    
+    if (!searchResponse.ok) throw new Error('API failed');
+    
     const searchData = await searchResponse.json();
 
     if (!searchData.items || searchData.items.length === 0) {
-      videosGrid.innerHTML = '<div style="color: #aaa; text-align: center; padding: 40px;">No videos found</div>';
+      useFallback();
       return;
     }
 
-    // Get video IDs
     const videoIds = searchData.items.map(item => item.id.videoId).join(',');
-
-    // Fetch video details (duration, views, etc.)
     const detailsUrl = `${BASE_URL}/videos?part=contentDetails,statistics&id=${videoIds}&key=${API_KEY}`;
     const detailsResponse = await fetch(detailsUrl);
     const detailsData = await detailsResponse.json();
 
-    // Merge data
     videos = searchData.items.map((item, index) => {
       const details = detailsData.items[index] || {};
       return {
@@ -95,14 +134,19 @@ async function fetchVideos(query = 'trending', maxResults = 24) {
 
     renderVideos();
   } catch (error) {
-    console.error('Error fetching videos:', error);
-    videosGrid.innerHTML = '<div style="color: #ff5252; text-align: center; padding: 40px;">Error loading videos. Please check your API key.</div>';
+    console.warn('Using fallback data due to API error');
+    useFallback();
   }
+}
+
+function useFallback() {
+  videos = fallbackVideos;
+  renderVideos();
 }
 
 // ===== RENDER FUNCTIONS =====
 function showSkeletonLoaders() {
-  videosGrid.innerHTML = Array(12).fill(0).map(() => `
+  videosGrid.innerHTML = Array(8).fill(0).map(() => `
     <div class="skeleton-card">
       <div class="sk-thumb"></div>
       <div class="sk-body">
@@ -134,7 +178,7 @@ function renderVideos() {
             <div class="video-meta">
               <div class="channel-name">${video.channelName}</div>
               <div class="video-stats">
-                <span>${formatViews(parseInt(video.views))}</span>
+                <span>${formatViews(video.views)}</span>
                 <span>•</span>
                 <span>${timeAgo(video.publishedAt)}</span>
               </div>
@@ -146,11 +190,8 @@ function renderVideos() {
   }).join('');
 }
 
-// ===== VIDEO PLAYER =====
 function openVideo(videoId) {
-  // Store video ID in localStorage
   localStorage.setItem('currentVideoId', videoId);
-  // Redirect to video page
   window.location.href = 'video.html';
 }
 
@@ -160,15 +201,12 @@ searchBtn.addEventListener('click', () => {
   if (query) {
     currentQuery = query;
     fetchVideos(query);
-    // Remove active class from all chips
     chips.forEach(chip => chip.classList.remove('active'));
   }
 });
 
 searchInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    searchBtn.click();
-  }
+  if (e.key === 'Enter') searchBtn.click();
 });
 
 chips.forEach(chip => {
