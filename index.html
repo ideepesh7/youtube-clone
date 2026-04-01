@@ -3,87 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YouTube</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>YouTube Clone</title>
+  <link rel="stylesheet" href="style.css?v=1.1" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="nav-left">
     <button class="icon-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-    <a href="index.html" class="logo">
-      <img src="https://www.youtube.com/img/desktop/yt_1200.png" alt="YouTube" class="logo-img">
+    <a href="index.html" class="logo" id="logoHome">
+      <i class="fab fa-youtube" style="color: #f00; font-size: 24px;"></i>
       <span class="logo-text">YouTube</span>
     </a>
   </div>
   <div class="nav-center">
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search" />
+      <input type="text" id="searchInput" placeholder="Search" autocomplete="off" />
       <button id="searchBtn" class="search-btn"><i class="fas fa-search"></i></button>
     </div>
     <button class="icon-btn mic-btn"><i class="fas fa-microphone"></i></button>
   </div>
   <div class="nav-right">
     <button class="icon-btn"><i class="fas fa-video"></i></button>
+    <button class="icon-btn"><i class="fas fa-th"></i></button>
     <button class="icon-btn"><i class="fas fa-bell"></i></button>
     <div class="avatar">D</div>
   </div>
 </header>
 
-<!-- SIDEBAR + MAIN -->
 <div class="page-layout">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <nav>
       <a href="index.html" class="sidebar-item active"><i class="fas fa-home"></i><span>Home</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-fire"></i><span>Trending</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-music"></i><span>Music</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-film"></i><span>Movies</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-gamepad"></i><span>Gaming</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-newspaper"></i><span>News</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-trophy"></i><span>Sports</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-bolt"></i><span>Shorts</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-play-circle"></i><span>Subscriptions</span></a>
       <hr class="sidebar-divider">
-      <a href="#" class="sidebar-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-flag"></i><span>Report history</span></a>
-      <a href="#" class="sidebar-item"><i class="fas fa-question-circle"></i><span>Help</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-folder"></i><span>Library</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-history"></i><span>History</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-clock"></i><span>Watch later</span></a>
+      <a href="#" class="sidebar-item"><i class="fas fa-thumbs-up"></i><span>Liked videos</span></a>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content">
-    <!-- CATEGORY CHIPS -->
     <div class="chips-bar" id="chipsBar">
       <button class="chip active" data-q="trending">All</button>
-      <button class="chip" data-q="music india">Music</button>
-      <button class="chip" data-q="gaming">Gaming</button>
-      <button class="chip" data-q="news today">News</button>
-      <button class="chip" data-q="cricket highlights">Cricket</button>
-      <button class="chip" data-q="bollywood movies">Bollywood</button>
-      <button class="chip" data-q="technology">Technology</button>
-      <button class="chip" data-q="cooking recipes">Cooking</button>
-      <button class="chip" data-q="fitness workout">Fitness</button>
-      <button class="chip" data-q="education">Education</button>
-      <button class="chip" data-q="comedy">Comedy</button>
-      <button class="chip" data-q="travel vlog">Travel</button>
+      <button class="chip" data-q="new music">Music</button>
+      <button class="chip" data-q="gaming highlights">Gaming</button>
+      <button class="chip" data-q="daily news">News</button>
+      <button class="chip" data-q="cricket">Cricket</button>
+      <button class="chip" data-q="tech reviews">Tech</button>
+      <button class="chip" data-q="live stream">Live</button>
+      <button class="chip" data-q="tutorials">Education</button>
+      <button class="chip" data-q="comedy gold">Comedy</button>
     </div>
 
-    <!-- VIDEO GRID -->
     <div class="videos-grid" id="videosGrid">
-      <!-- skeleton loaders -->
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
-      <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line"></div><div class="sk-line short"></div></div></div></div>
+      <!-- Skeletons populated by JS -->
     </div>
   </main>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=1.2"></script>
 </body>
 </html>
